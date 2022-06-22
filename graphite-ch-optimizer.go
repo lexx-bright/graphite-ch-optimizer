@@ -35,7 +35,7 @@ SELECT
 	countDistinct(p.name) AS parts,
 	toDateTime(max(p.max_date + 1)) AS max_time,
 	max_time + age AS rollup_time,
-	min(p.modification_time) AS modified_at
+	max(p.modification_time) AS modified_at
 FROM system.parts AS p
 INNER JOIN
 (
@@ -51,7 +51,7 @@ INNER JOIN
 		age
 ) AS g ON (p.table = g.table) AND (p.database = g.database)
 -- toDateTime(p.max_date + 1) + g.age AS unaggregated rollup_time
-WHERE p.active AND ((toDateTime(p.max_date + 1) + g.age) < now())
+WHERE p.active
 GROUP BY
 	table,
 	partition_name,
