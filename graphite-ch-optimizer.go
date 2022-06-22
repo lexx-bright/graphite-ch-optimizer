@@ -60,7 +60,7 @@ GROUP BY
 -- parts > 1: merge should be applied because of new parts
 -- modified_at < (now() - @Interval): we want to merge active partitions only once per interval,
 --   so do not touch partitions with current active inserts
-HAVING ((modified_at < rollup_time) OR (parts > 1))
+HAVING ((modified_at BETWEEN FROM_UNIXTIME(1) AND rollup_time) OR (parts > 1))
 	AND (modified_at < (now() - @Interval))
 ORDER BY
 	table ASC,
